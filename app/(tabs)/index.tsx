@@ -5,9 +5,10 @@ export default function App() {
     const [targetNumber, setTargetNumber] = useState<number>(generateRandomNumber());
     const [guess, setGuess] = useState<string>('');
     const [message, setMessage] = useState<string>('');
-    const [messageColor, setMessageColor] = useState<string>('#f5f5f5'); 
+    const [messageColor, setMessageColor] = useState<string>('#f5f5f5');
     const [attempts, setAttempts] = useState<number>(0);
     const [guessedNumbers, setGuessedNumbers] = useState<number[]>([]);
+    const maxAttempts = 10; 
 
     function generateRandomNumber(): number {
         return Math.floor(Math.random() * 100) + 1;
@@ -15,6 +16,12 @@ export default function App() {
 
     function handleGuess() {
         const guessedNumber = parseInt(guess, 10);
+
+        if (attempts >= maxAttempts) {
+            setMessage(`Game over! You've used all ${maxAttempts} attempts.`);
+            setMessageColor('#ff6347');
+            return;
+        }
 
         if (isNaN(guessedNumber)) {
             setMessage("Please enter a valid number.");
@@ -65,8 +72,13 @@ export default function App() {
                 onChangeText={(text) => setGuess(text)}
                 placeholder="Enter your guess"
                 placeholderTextColor="#888"
+                editable={attempts <= maxAttempts} // Disable input after max attempts
             />
-            <TouchableOpacity style={styles.button} onPress={handleGuess}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={handleGuess}
+                disabled={attempts > maxAttempts} // Disable button after max attempts
+            >
                 <Text style={styles.buttonText}>Guess</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={handleReset}>
