@@ -17,6 +17,13 @@ export default function App() {
     function handleGuess() {
         const guessedNumber = parseInt(guess, 10);
 
+        if (guessedNumber < 1 || guessedNumber > 100)
+        {
+            setMessage(`The number must be between 1 and 100!!`);
+            setMessageColor('#ff6347');
+            return;
+        }
+
         if (attempts >= maxAttempts) {
             setMessage(`Game over! You've used all ${maxAttempts} attempts.`);
             setMessageColor('#ff6347');
